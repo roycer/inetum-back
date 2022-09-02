@@ -1,0 +1,270 @@
+CREATE SEQUENCE IF NOT EXISTS public.cargo_id_cargo_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 2147483647
+    CACHE 1;
+
+ALTER SEQUENCE public.cargo_id_cargo_seq OWNER TO postgres;
+
+CREATE TABLE IF NOT EXISTS public.dn_cargo
+(
+    id_cargo integer NOT NULL DEFAULT nextval('cargo_id_cargo_seq'::regclass),
+    description character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT cargo_pkey PRIMARY KEY (id_cargo)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.dn_cargo OWNER to postgres;
+
+INSERT INTO public.dn_cargo(description) VALUES ('Auditor');
+INSERT INTO public.dn_cargo(description) VALUES ('Especialista');
+INSERT INTO public.dn_cargo(description) VALUES ('Analista');
+INSERT INTO public.dn_cargo(description) VALUES ('Asistente');
+
+--------------------------------------------------------------------------------------------
+
+CREATE SEQUENCE IF NOT EXISTS public.anio_id_anio_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 2147483647
+    CACHE 1;
+
+ALTER SEQUENCE public.anio_id_anio_seq OWNER TO postgres;
+
+CREATE TABLE IF NOT EXISTS public.dn_anio
+(
+    id_anio integer NOT NULL DEFAULT nextval('anio_id_anio_seq'::regclass),
+    description character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT anio_pkey PRIMARY KEY (id_anio)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.dn_anio OWNER to postgres;
+
+INSERT INTO public.dn_anio(description) VALUES ('2020');
+INSERT INTO public.dn_anio(description) VALUES ('2021');
+INSERT INTO public.dn_anio(description) VALUES ('2022');
+INSERT INTO public.dn_anio(description) VALUES ('2023');
+INSERT INTO public.dn_anio(description) VALUES ('2024');
+INSERT INTO public.dn_anio(description) VALUES ('2025');
+
+--------------------------------------------------------------------------------------------
+
+CREATE SEQUENCE IF NOT EXISTS public.integrante_comite_id_integrante_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 2147483647
+    CACHE 1;
+
+ALTER SEQUENCE public.integrante_comite_id_integrante_seq OWNER TO postgres;
+
+CREATE TABLE IF NOT EXISTS public.dn_integrante_comite
+(
+    id_integrante integer NOT NULL DEFAULT nextval('integrante_comite_id_integrante_seq'::regclass),
+    dni character varying(10),
+	nombre_completo character varying(255),
+	codigo_cgr integer,
+	id_cargo integer,
+	email character varying(255),
+	id_anio integer,
+    CONSTRAINT integrante_comite_pkey PRIMARY KEY (id_integrante)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.dn_integrante_comite OWNER to postgres;
+
+--------------------------------------------------------------------------------------------
+
+CREATE OR REPLACE VIEW public.uvw_tablas_negocio
+AS
+SELECT table_name,
+ROW_NUMBER() OVER () AS id
+FROM information_schema.tables
+WHERE table_schema='public' AND table_type='BASE TABLE'
+AND table_name LIKE '%dn%';
+
+ALTER TABLE IF EXISTS public.uvw_tablas_negocio OWNER to postgres;
+
+--------------------------------------------------------------------------------------------
+
+CREATE OR REPLACE VIEW public.uvw_tablas_columnas_negocio
+AS
+SELECT table_name, column_name, data_type, is_nullable, 
+ROW_NUMBER() OVER () AS id
+FROM information_schema.columns 
+WHERE table_name LIKE '%dn%';
+
+ALTER TABLE IF EXISTS public.uvw_tablas_columnas_negocio OWNER to postgres;
+
+--------------------------------------------------------------------------------------------
+
+CREATE SEQUENCE IF NOT EXISTS public.tipo_servicio_id_tipo_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 2147483647
+    CACHE 1;
+
+ALTER SEQUENCE public.tipo_servicio_id_tipo_seq OWNER TO postgres;
+
+CREATE TABLE IF NOT EXISTS public.dn_tipo_servicio
+(
+    id_tipo integer NOT NULL DEFAULT nextval('tipo_servicio_id_tipo_seq'::regclass),
+    description character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT tipo_pkey PRIMARY KEY (id_tipo)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.dn_tipo_servicio OWNER to postgres;
+
+--------------------------------------------------------------------------------------------
+
+CREATE SEQUENCE IF NOT EXISTS public.modalidad_id_modalidad_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 2147483647
+    CACHE 1;
+
+ALTER SEQUENCE public.modalidad_id_modalidad_seq OWNER TO postgres;
+
+CREATE TABLE IF NOT EXISTS public.dn_modalidad
+(
+    id_modalidad integer NOT NULL DEFAULT nextval('modalidad_id_modalidad_seq'::regclass),
+    description character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT modalidad_pkey PRIMARY KEY (id_modalidad)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.dn_modalidad OWNER to postgres;
+
+--------------------------------------------------------------------------------------------
+
+CREATE SEQUENCE IF NOT EXISTS public.servicio_control_id_servicio_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 2147483647
+    CACHE 1;
+
+ALTER SEQUENCE public.servicio_control_id_servicio_seq OWNER TO postgres;
+
+CREATE TABLE IF NOT EXISTS public.dn_servicio_control
+(
+    id_servicio integer NOT NULL DEFAULT nextval('servicio_control_id_servicio_seq'::regclass),
+	id_tipo integer,
+	id_modalidad integer,
+	normativa_vigente character varying(255),
+    CONSTRAINT servicio_control_pkey PRIMARY KEY (id_servicio)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.dn_servicio_control OWNER to postgres;
+
+--------------------------------------------------------------------------------------------
+
+CREATE SEQUENCE IF NOT EXISTS public.materia_id_materia_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 2147483647
+    CACHE 1;
+
+ALTER SEQUENCE public.materia_id_materia_seq OWNER TO postgres;
+
+CREATE TABLE IF NOT EXISTS public.dn_materia
+(
+    id_materia integer NOT NULL DEFAULT nextval('materia_id_materia_seq'::regclass),
+    description character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT materia_pkey PRIMARY KEY (id_materia)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.dn_materia OWNER to postgres;
+
+--------------------------------------------------------------------------------------------
+
+CREATE SEQUENCE IF NOT EXISTS public.servicio_control_objetivo_id_objetivo_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 2147483647
+    CACHE 1;
+
+ALTER SEQUENCE public.servicio_control_objetivo_id_objetivo_seq OWNER TO postgres;
+
+CREATE TABLE IF NOT EXISTS public.dn_servicio_control_objetivo
+(
+    id_objetivo integer NOT NULL DEFAULT nextval('servicio_control_objetivo_id_objetivo_seq'::regclass),
+	id_servicio integer,
+	id_materia integer,
+	asunto character varying(255),
+	obj_principal character varying(255),
+	obj_especifico character varying(255),
+    CONSTRAINT servicio_control_objetivo_pkey PRIMARY KEY (id_objetivo)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.dn_servicio_control_objetivo OWNER to postgres;
+
+--------------------------------------------------------------------------------------------
+
+CREATE SEQUENCE IF NOT EXISTS public.servicio_control_recomendacion_id_recomendacion_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 2147483647
+    CACHE 1;
+
+ALTER SEQUENCE public.servicio_control_recomendacion_id_recomendacion_seq OWNER TO postgres;
+
+CREATE TABLE IF NOT EXISTS public.dn_servicio_control_recomendacion
+(
+    id_recomendacion integer NOT NULL DEFAULT nextval('servicio_control_recomendacion_id_recomendacion_seq'::regclass),
+	id_servicio integer,
+	accion character varying(255),
+	fecha timestamp without time zone,
+	recomendacion character varying(255),
+    CONSTRAINT servicio_control_recomendacion_pkey PRIMARY KEY (id_recomendacion)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.dn_servicio_control_recomendacion OWNER to postgres;
+
+--------------------------------------------------------------------------------------------
+
+CREATE SEQUENCE IF NOT EXISTS public.servicio_control_conclusion_id_conclusion_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 2147483647
+    CACHE 1;
+
+ALTER SEQUENCE public.servicio_control_conclusion_id_conclusion_seq OWNER TO postgres;
+
+CREATE TABLE IF NOT EXISTS public.dn_servicio_control_conclusion
+(
+    id_conclusion integer NOT NULL DEFAULT nextval('servicio_control_conclusion_id_conclusion_seq'::regclass),
+	id_servicio integer,
+	conclusion_principal character varying(255),
+	conclusion_especifica character varying(255),
+    CONSTRAINT servicio_control_conclusion_pkey PRIMARY KEY (id_conclusion)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.dn_servicio_control_conclusion OWNER to postgres;
+
+--------------------------------------------------------------------------------------------
