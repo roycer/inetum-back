@@ -75,4 +75,51 @@ public class FormularioDataEntityManagerImpl {
 
 		return true;
 	}
+	
+	@Transactional
+	public Integer registrarData2(String tableName, 
+			List<String> listaInputType, 
+			List<String> listaColumnas, 
+			List<String> listaValores,
+			String primaryKey) throws Exception {
+
+		String columnasFinal = String.join(",", listaColumnas);
+
+		final StringBuilder valores = new StringBuilder();
+		for(int i=0; i<listaValores.size(); i++) {
+			valores.append("?" + (i+1) + ",");
+		}
+		String valoresFinal = valores.toString().substring(0, valores.toString().length() - 1);
+
+		String s = "";
+		if(primaryKey == null) {
+			s = "INSERT INTO %s (%s) VALUES (%s)";
+		}
+		else {
+			s = "INSERT INTO %s (%s) VALUES (%s) returning " + primaryKey;
+		}
+
+		String sql = String.format(s, tableName, columnasFinal, valoresFinal);
+
+		Query insert = em.createNativeQuery(sql);
+
+		for (int j=0; j<listaValores.size(); j++) {
+			if (listaInputType.get(j).equals("number") || listaInputType.get(j).equals("option")) {
+				Integer number = Integer.parseInt(listaValores.get(j));
+				insert.setParameter(j+1, number);
+			} else if (listaInputType.get(j).equals("date")) {
+				DateFormat sourceFormat = new SimpleDateFormat("dd/MM/yyyy");
+				Date date = sourceFormat.parse(listaValores.get(j));
+				insert.setParameter(j+1, date);
+			} else {
+				insert.setParameter(j+1, listaValores.get(j).toString());
+			}
+		}
+		if(primaryKey == null) {
+			insert.executeUpdate();
+			return 1;
+		} else {
+			return (Integer) insert.getSingleResult();
+		}
+	}
 }

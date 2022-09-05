@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.gregpalacios.builder</groupId>
-	<artifactId>builder</artifactId>
+	<artifactId>inetum-back</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>builder</name>
 	<description>Prototipo App Builder</description>
