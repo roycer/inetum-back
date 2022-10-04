@@ -36,7 +36,7 @@ public class FormularioDataController {
 			@ApiResponse(responseCode = "403", description = "Está prohibido acceder al recurso", content = @Content()),
 			@ApiResponse(responseCode = "404", description = "Recurso no encontrado", content = @Content()) })
 	@PostMapping
-	public ResponseEntity<Boolean> registrarData(@Valid @RequestBody List<FormularioData> data) throws Exception {
+	public ResponseEntity<Boolean> registrarData(@Valid @RequestBody List<FormularioData> data) {
 		Boolean estado;
 		try {
 			em.registrarData(data);
@@ -45,7 +45,7 @@ public class FormularioDataController {
 			estado = false;
 		}
 
-		return new ResponseEntity<Boolean>(estado, HttpStatus.CREATED);
+		return new ResponseEntity<>(estado, HttpStatus.CREATED);
 	}
 
 }

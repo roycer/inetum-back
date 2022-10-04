@@ -21,7 +21,7 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
 	public final ResponseEntity<ExceptionResponse> manejarTodasExcepciones(Exception ex, WebRequest request) {
 		ExceptionResponse er = new ExceptionResponse(LocalDateTime.now(), ex.getMessage(),
 				request.getDescription(false));
-		return new ResponseEntity<ExceptionResponse>(er, HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(er, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@ExceptionHandler(ModeloNotFoundException.class)
@@ -29,7 +29,7 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
 			WebRequest request) {
 		ExceptionResponse er = new ExceptionResponse(LocalDateTime.now(), ex.getMessage(),
 				request.getDescription(false));
-		return new ResponseEntity<ExceptionResponse>(er, HttpStatus.NOT_FOUND);
+		return new ResponseEntity<>(er, HttpStatus.NOT_FOUND);
 	}
 
 	@Override
@@ -37,11 +37,11 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
 
 		String mensaje = ex.getBindingResult().getAllErrors().stream().map(e -> {
-			return e.getDefaultMessage().toString().concat(", ");
+			return e.getDefaultMessage().concat(", ");
 		}).collect(Collectors.joining());
 
 		ExceptionResponse er = new ExceptionResponse(LocalDateTime.now(), mensaje, request.getDescription(false));
-		return new ResponseEntity<Object>(er, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(er, HttpStatus.BAD_REQUEST);
 	}
 
 }

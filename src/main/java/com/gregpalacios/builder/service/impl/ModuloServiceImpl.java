@@ -3,6 +3,7 @@ package com.gregpalacios.builder.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.gregpalacios.builder.exception.HandlerException;
 import com.gregpalacios.builder.model.Modulo;
 import com.gregpalacios.builder.repo.IGenericRepo;
 import com.gregpalacios.builder.repo.IModuloRepo;
@@ -20,7 +21,7 @@ public class ModuloServiceImpl extends CRUDImpl<Modulo, Integer> implements IMod
 	}
 
 	@Override
-	public Modulo listarPorKey(String key) throws Exception {
+	public Modulo listarPorKey(String key) throws HandlerException {
 		return repo.findByKey(key);
 	}
 

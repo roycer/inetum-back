@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gregpalacios.builder.exception.HandlerException;
 import com.gregpalacios.builder.model.TablaNegocio;
 import com.gregpalacios.builder.service.ITablaNegocioService;
 
@@ -33,9 +34,9 @@ public class TablaNegocioController {
 			@ApiResponse(responseCode = "403", description = "Está prohibido acceder al recurso que estaba tratando de alcanzar", content = @Content()),
 			@ApiResponse(responseCode = "404", description = "No se encuentra el recurso que intentabas alcanzar", content = @Content()) })
 	@GetMapping
-	public ResponseEntity<List<TablaNegocio>> listar() throws Exception {
+	public ResponseEntity<List<TablaNegocio>> listar() throws HandlerException {
 		List<TablaNegocio> lista = service.listar();
-		return new ResponseEntity<List<TablaNegocio>>(lista, HttpStatus.OK);
+		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 
 }

@@ -11,6 +11,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -19,9 +21,11 @@ import org.springframework.stereotype.Component;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class CORS implements Filter {
 
+	private static final Logger logger = LoggerFactory.getLogger(CORS.class);
+
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
-		// TODO Auto-generated method stub
+		logger.info("FilterConfig CORS");
 	}
 
 	@Override
@@ -33,7 +37,8 @@ public class CORS implements Filter {
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		response.setHeader("Access-Control-Allow-Methods", "DELETE, GET, OPTIONS, PATCH, POST, PUT");
 		response.setHeader("Access-Control-Max-Age", "3600");
-		response.setHeader("Access-Control-Allow-Headers", "x-requested-with, authorization, Content-Type, Authorization, credential, X-XSRF-TOKEN");
+		response.setHeader("Access-Control-Allow-Headers",
+				"x-requested-with, authorization, Content-Type, Authorization, credential, X-XSRF-TOKEN");
 
 		if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
 			response.setStatus(HttpServletResponse.SC_OK);
@@ -41,10 +46,10 @@ public class CORS implements Filter {
 			chain.doFilter(req, res);
 		}
 	}
-	
+
 	@Override
 	public void destroy() {
-		// TODO Auto-generated method stub
+		logger.info("Destroy CORS");
 	}
-	
+
 }

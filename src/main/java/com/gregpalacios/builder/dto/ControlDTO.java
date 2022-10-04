@@ -1,92 +1,39 @@
-package com.gregpalacios.builder.model;
+package com.gregpalacios.builder.dto;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-
-import org.hibernate.annotations.Where;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.gregpalacios.builder.dto.ControlDTO;
+import com.gregpalacios.builder.model.Modulo;
+import com.gregpalacios.builder.model.SubModulo;
 
-@Entity
-@Where(clause = "estado_reg='1'")
-@Table(name = "control")
-public class Control {
+public class ControlDTO {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer idControl;
 
-	@NotNull
-	@ManyToOne
-	@JoinColumn(name = "id_modulo", nullable = false, foreignKey = @ForeignKey(name = "FK_control_modulo"))
 	private Modulo modulo;
 
-	@ManyToOne
-	@JoinColumn(name = "id_sub_modulo", nullable = true, foreignKey = @ForeignKey(name = "FK_control_submodulo"))
 	private SubModulo submodulo;
 
-	@Column(name = "key", updatable = false, nullable = false)
 	private String key;
 
-	@Column(name = "label", nullable = false)
 	private String label;
 
-	@Column(name = "obligatorio", nullable = false)
 	private Integer required;
 
-	@Column(name = "orden", nullable = false)
 	private Integer order;
 
-	@Column(name = "control_type", nullable = false)
 	private String controlType;
 
-	@Column(name = "input_type", nullable = false)
 	private String inputType;
 
-	@Column(name = "grid_class", nullable = false)
 	private String gridClass;
 
-	@Column(name = "column_name", nullable = false)
 	private String columnName;
 
-	@Column(name = "estado_reg", nullable = false)
 	private Integer estadoReg;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy", timezone = "America/Lima")
-	@Column(name = "fecha_reg", nullable = false)
 	private Date fechaReg;
-
-	public Control() {
-		super();
-	}
-
-	public Control(@Valid ControlDTO dto) {
-		this.idControl = dto.getIdControl();
-		this.modulo = dto.getModulo();
-		this.submodulo = dto.getSubmodulo();
-		this.key = dto.getKey();
-		this.label = dto.getLabel();
-		this.required = dto.getRequired();
-		this.order = dto.getOrder();
-		this.controlType = dto.getControlType();
-		this.inputType = dto.getInputType();
-		this.gridClass = dto.getGridClass();
-		this.columnName = dto.getColumnName();
-		this.estadoReg = dto.getEstadoReg();
-		this.fechaReg = dto.getFechaReg();
-	}
 
 	public Integer getIdControl() {
 		return idControl;
@@ -194,10 +141,10 @@ public class Control {
 
 	@Override
 	public String toString() {
-		return "Control [idControl=" + idControl + ", modulo=" + modulo + ", submodulo=" + submodulo + ", key=" + key
+		return "ControlDTO [idControl=" + idControl + ", modulo=" + modulo + ", submodulo=" + submodulo + ", key=" + key
 				+ ", label=" + label + ", required=" + required + ", order=" + order + ", controlType=" + controlType
 				+ ", inputType=" + inputType + ", gridClass=" + gridClass + ", columnName=" + columnName
 				+ ", estadoReg=" + estadoReg + ", fechaReg=" + fechaReg + "]";
 	}
-
+	
 }

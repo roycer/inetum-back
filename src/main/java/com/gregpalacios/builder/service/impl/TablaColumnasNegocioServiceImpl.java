@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.gregpalacios.builder.exception.HandlerException;
 import com.gregpalacios.builder.model.TablaColumnasNegocio;
 import com.gregpalacios.builder.repo.IGenericRepo;
 import com.gregpalacios.builder.repo.ITablaColumnasNegocioRepo;
@@ -22,7 +23,7 @@ public class TablaColumnasNegocioServiceImpl extends CRUDImpl<TablaColumnasNegoc
 	}
 
 	@Override
-	public List<TablaColumnasNegocio> listarPorTableName(String tableName) throws Exception {
+	public List<TablaColumnasNegocio> listarPorTableName(String tableName) throws HandlerException {
 		return repo.findByTableName(tableName);
 	}
 

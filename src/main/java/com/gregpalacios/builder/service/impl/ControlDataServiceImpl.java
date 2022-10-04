@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.gregpalacios.builder.exception.HandlerException;
 import com.gregpalacios.builder.model.ControlData;
 import com.gregpalacios.builder.repo.IControlDataRepo;
 import com.gregpalacios.builder.repo.IGenericRepo;
@@ -23,18 +24,18 @@ public class ControlDataServiceImpl extends CRUDImpl<ControlData, Integer> imple
 	}
 
 	@Override
-	public List<ControlData> listarPorIdModulo(Integer idModulo) throws Exception {
+	public List<ControlData> listarPorIdModulo(Integer idModulo) throws HandlerException {
 		return repo.findByIdModulo(idModulo);
 	}
 
 	@Override
-	public List<ControlData> listarPorKeyModulo(String key) throws Exception {
+	public List<ControlData> listarPorKeyModulo(String key) throws HandlerException {
 		return repo.findByKeyModulo(key);
 	}
 
 	@Transactional
 	@Override
-	public void registrarTransaccional(List<ControlData> datos) throws Exception {
+	public void registrarTransaccional(List<ControlData> datos) throws HandlerException {
 		for (ControlData data : datos) {
 			repo.save(data);
 		}

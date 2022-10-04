@@ -37,9 +37,9 @@ public class SelectDataController {
 			@ApiResponse(responseCode = "403", description = "Está prohibido acceder al recurso que estaba tratando de alcanzar", content = @Content()),
 			@ApiResponse(responseCode = "404", description = "No se encuentra el recurso que intentabas alcanzar", content = @Content()) })
 	@PostMapping
-	public ResponseEntity<List<OptionData>> listar(@Valid @RequestBody SelectData data) throws Exception {
+	public ResponseEntity<List<OptionData>> listar(@Valid @RequestBody SelectData data) {
 		List<OptionData> lista = em.listSelectData(data);
-		return new ResponseEntity<List<OptionData>>(lista, HttpStatus.OK);
+		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 
 }

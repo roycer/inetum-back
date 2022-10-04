@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gregpalacios.builder.dto.ControlOptionDTO;
+import com.gregpalacios.builder.exception.HandlerException;
 import com.gregpalacios.builder.exception.ModeloNotFoundException;
 import com.gregpalacios.builder.model.ControlOption;
 import com.gregpalacios.builder.service.IControlOptionService;
@@ -41,9 +43,9 @@ public class OptionController {
 			@ApiResponse(responseCode = "403", description = "Está prohibido acceder al recurso que estaba tratando de alcanzar", content = @Content()),
 			@ApiResponse(responseCode = "404", description = "No se encuentra el recurso que intentabas alcanzar", content = @Content()) })
 	@GetMapping
-	public ResponseEntity<List<ControlOption>> listar() throws Exception {
+	public ResponseEntity<List<ControlOption>> listar() throws HandlerException {
 		List<ControlOption> lista = service.listar();
-		return new ResponseEntity<List<ControlOption>>(lista, HttpStatus.OK);
+		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 
 	@Operation(summary = "Listar las opciones por ID del control")
@@ -53,9 +55,10 @@ public class OptionController {
 			@ApiResponse(responseCode = "403", description = "Está prohibido acceder al recurso que estaba tratando de alcanzar", content = @Content()),
 			@ApiResponse(responseCode = "404", description = "No se encuentra el recurso que intentabas alcanzar", content = @Content()) })
 	@GetMapping("/control/{id}")
-	public ResponseEntity<List<ControlOption>> listarPorIdControl(@PathVariable("id") Integer id) throws Exception {
+	public ResponseEntity<List<ControlOption>> listarPorIdControl(@PathVariable("id") Integer id)
+			throws HandlerException {
 		List<ControlOption> lista = service.listarPorIdControl(id);
-		return new ResponseEntity<List<ControlOption>>(lista, HttpStatus.OK);
+		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 
 	@Operation(summary = "Listar las opciones por KEY del control")
@@ -65,9 +68,10 @@ public class OptionController {
 			@ApiResponse(responseCode = "403", description = "Está prohibido acceder al recurso que estaba tratando de alcanzar", content = @Content()),
 			@ApiResponse(responseCode = "404", description = "No se encuentra el recurso que intentabas alcanzar", content = @Content()) })
 	@GetMapping("/control/k/{key}")
-	public ResponseEntity<List<ControlOption>> listarPorKeyControl(@PathVariable("key") String key) throws Exception {
+	public ResponseEntity<List<ControlOption>> listarPorKeyControl(@PathVariable("key") String key)
+			throws HandlerException {
 		List<ControlOption> lista = service.listarPorKeyControl(key);
-		return new ResponseEntity<List<ControlOption>>(lista, HttpStatus.OK);
+		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 
 	@Operation(summary = "Obtener opción por ID")
@@ -77,14 +81,14 @@ public class OptionController {
 			@ApiResponse(responseCode = "403", description = "Está prohibido acceder al recurso que estaba tratando de alcanzar", content = @Content()),
 			@ApiResponse(responseCode = "404", description = "No se encuentra el recurso que intentabas alcanzar", content = @Content()) })
 	@GetMapping("/{id}")
-	public ResponseEntity<ControlOption> listarPorId(@PathVariable("id") Integer id) throws Exception {
+	public ResponseEntity<ControlOption> listarPorId(@PathVariable("id") Integer id) throws HandlerException {
 		ControlOption obj = service.listarPorId(id);
 
 		if (obj == null) {
 			throw new ModeloNotFoundException("ID NO ENCONTRADO " + id);
 		}
 
-		return new ResponseEntity<ControlOption>(obj, HttpStatus.OK);
+		return new ResponseEntity<>(obj, HttpStatus.OK);
 	}
 
 	@Operation(summary = "Obtener opción por KEY")
@@ -94,14 +98,14 @@ public class OptionController {
 			@ApiResponse(responseCode = "403", description = "Está prohibido acceder al recurso que estaba tratando de alcanzar", content = @Content()),
 			@ApiResponse(responseCode = "404", description = "No se encuentra el recurso que intentabas alcanzar", content = @Content()) })
 	@GetMapping("/k/{key}")
-	public ResponseEntity<ControlOption> listarPorKey(@PathVariable("key") String key) throws Exception {
+	public ResponseEntity<ControlOption> listarPorKey(@PathVariable("key") String key) throws HandlerException {
 		ControlOption obj = service.listarPorKey(key);
 
 		if (obj == null) {
 			throw new ModeloNotFoundException("KEY NO ENCONTRADO " + key);
 		}
 
-		return new ResponseEntity<ControlOption>(obj, HttpStatus.OK);
+		return new ResponseEntity<>(obj, HttpStatus.OK);
 	}
 
 	@Operation(summary = "Registrar opción")
@@ -111,9 +115,10 @@ public class OptionController {
 			@ApiResponse(responseCode = "403", description = "Está prohibido acceder al recurso", content = @Content()),
 			@ApiResponse(responseCode = "404", description = "Recurso no encontrado", content = @Content()) })
 	@PostMapping
-	public ResponseEntity<ControlOption> registrar(@Valid @RequestBody ControlOption data) throws Exception {
+	public ResponseEntity<ControlOption> registrar(@Valid @RequestBody ControlOptionDTO dto) throws HandlerException {
+		ControlOption data = new ControlOption(dto);
 		ControlOption obj = service.registrar(data);
-		return new ResponseEntity<ControlOption>(obj, HttpStatus.CREATED);
+		return new ResponseEntity<>(obj, HttpStatus.CREATED);
 	}
 
 	@Operation(summary = "Actualizar opción")
@@ -123,9 +128,10 @@ public class OptionController {
 			@ApiResponse(responseCode = "403", description = "Está prohibido acceder al recurso", content = @Content()),
 			@ApiResponse(responseCode = "404", description = "Recurso no encontrado", content = @Content()) })
 	@PutMapping
-	public ResponseEntity<ControlOption> modificar(@Valid @RequestBody ControlOption data) throws Exception {
+	public ResponseEntity<ControlOption> modificar(@Valid @RequestBody ControlOptionDTO dto) throws HandlerException {
+		ControlOption data = new ControlOption(dto);
 		ControlOption obj = service.modificar(data);
-		return new ResponseEntity<ControlOption>(obj, HttpStatus.OK);
+		return new ResponseEntity<>(obj, HttpStatus.OK);
 	}
 
 	@Operation(summary = "Eliminar opción por ID")
@@ -135,7 +141,7 @@ public class OptionController {
 			@ApiResponse(responseCode = "403", description = "Está prohibido acceder al recurso", content = @Content()),
 			@ApiResponse(responseCode = "404", description = "Recurso no encontrado", content = @Content()) })
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Boolean> eliminar(@PathVariable("id") Integer id) throws Exception {
+	public ResponseEntity<Boolean> eliminar(@PathVariable("id") Integer id) throws HandlerException {
 		ControlOption obj = service.listarPorId(id);
 
 		if (obj == null) {
@@ -144,7 +150,7 @@ public class OptionController {
 
 		obj.setEstadoReg(0);
 		service.modificar(obj);
-		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+		return new ResponseEntity<>(true, HttpStatus.OK);
 	}
 
 }

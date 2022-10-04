@@ -11,11 +11,13 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Where;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.gregpalacios.builder.dto.SubModuloDTO;
 
 @Entity
 @Where(clause = "estado_reg='1'")
@@ -49,6 +51,21 @@ public class SubModulo {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy", timezone = "America/Lima")
 	@Column(name = "fecha_reg", nullable = false)
 	private Date fechaReg;
+
+	public SubModulo() {
+		super();
+	}
+
+	public SubModulo(@Valid SubModuloDTO dto) {
+		this.idSubModulo = dto.getIdSubModulo();
+		this.modulo = dto.getModulo();
+		this.key = dto.getKey();
+		this.label = dto.getLabel();
+		this.tableName = dto.getTableName();
+		this.columnName = dto.getColumnName();
+		this.estadoReg = dto.getEstadoReg();
+		this.fechaReg = dto.getFechaReg();
+	}
 
 	public Integer getIdSubModulo() {
 		return idSubModulo;

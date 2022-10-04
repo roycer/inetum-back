@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gregpalacios.builder.exception.HandlerException;
 import com.gregpalacios.builder.model.TablaColumnasNegocio;
 import com.gregpalacios.builder.service.ITablaColumnasNegocioService;
 
@@ -34,9 +35,9 @@ public class TablaColumnasNegocioController {
 			@ApiResponse(responseCode = "403", description = "Está prohibido acceder al recurso que estaba tratando de alcanzar", content = @Content()),
 			@ApiResponse(responseCode = "404", description = "No se encuentra el recurso que intentabas alcanzar", content = @Content()) })
 	@GetMapping
-	public ResponseEntity<List<TablaColumnasNegocio>> listar() throws Exception {
+	public ResponseEntity<List<TablaColumnasNegocio>> listar() throws HandlerException {
 		List<TablaColumnasNegocio> lista = service.listar();
-		return new ResponseEntity<List<TablaColumnasNegocio>>(lista, HttpStatus.OK);
+		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 
 	@Operation(summary = "Listar las columnas por nombre de la tabla")
@@ -47,9 +48,9 @@ public class TablaColumnasNegocioController {
 			@ApiResponse(responseCode = "404", description = "No se encuentra el recurso que intentabas alcanzar", content = @Content()) })
 	@GetMapping("/tabla/{tableName}")
 	public ResponseEntity<List<TablaColumnasNegocio>> listarPorTableName(@PathVariable("tableName") String tableName)
-			throws Exception {
+			throws HandlerException {
 		List<TablaColumnasNegocio> lista = service.listarPorTableName(tableName);
-		return new ResponseEntity<List<TablaColumnasNegocio>>(lista, HttpStatus.OK);
+		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 
 }

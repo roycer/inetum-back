@@ -24,9 +24,9 @@ public class SelectDataEntityManagerImpl {
 
 		List<OptionData> selectData = new ArrayList<>();
 		List<Object[]> results = em.createNativeQuery(sql).getResultList();
-		results.stream().forEach((record) -> {
-			Integer key = (Integer) record[0];
-			String value = (String) record[1];
+		results.stream().forEach(result -> {
+			Integer key = (Integer) result[0];
+			String value = (String) result[1];
 			OptionData dto = new OptionData();
 			dto.setKey(Integer.toString(key));
 			dto.setValue(value);

@@ -1,6 +1,7 @@
 package com.gregpalacios.builder.repo.impl;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,13 +23,12 @@ public class FormularioDataEntityManagerImpl {
 	EntityManager em;
 
 	@Transactional
-	public Boolean registrarData(List<FormularioData> datos) throws Exception {
-		List<String> listaTablas = new ArrayList<String>();
+	public Boolean registrarData(List<FormularioData> datos) throws ParseException {
+		List<String> listaTablas = new ArrayList<>();
 		for (FormularioData dato : datos) {
-			if (dato.getControl().getSubmodulo() == null) {
-				if (!listaTablas.contains(dato.getModulo().getTableName())) {
-					listaTablas.add(dato.getModulo().getTableName());
-				}
+			if ((dato.getControl().getSubmodulo() == null)
+					&& (!listaTablas.contains(dato.getModulo().getTableName()))) {
+				listaTablas.add(dato.getModulo().getTableName());
 			}
 		}
 
@@ -42,8 +42,8 @@ public class FormularioDataEntityManagerImpl {
 		return true;
 	}
 
-	public void registrarCabecera(String tableName, List<FormularioData> datos) throws Exception {
-		List<String> listaValores = new ArrayList<String>();
+	public void registrarCabecera(String tableName, List<FormularioData> datos) throws ParseException {
+		List<String> listaValores = new ArrayList<>();
 		final StringBuilder columnas = new StringBuilder();
 		final StringBuilder valores = new StringBuilder();
 		Integer index = 0;
@@ -51,7 +51,7 @@ public class FormularioDataEntityManagerImpl {
 			if (dato.getControl().getSubmodulo() == null) {
 				index++;
 
-				listaValores.add(dato.getControl().getInputType() + "&" + dato.getColumnValue());
+				listaValores.add(dato.getControl().getInputType() + "-&-" + dato.getColumnValue());
 
 				columnas.append(dato.getControl().getColumnName() + ",");
 				valores.append("?" + index + ",");
@@ -70,14 +70,14 @@ public class FormularioDataEntityManagerImpl {
 		ejecutarInsert(sql, listaValores);
 	}
 
-	public void ejecutarInsert(String sql, List<String> listaValores) throws Exception {
+	public void ejecutarInsert(String sql, List<String> listaValores) throws ParseException {
 		Query insert = em.createNativeQuery(sql);
 
 		Integer index = 0;
 		for (String valor : listaValores) {
 			index++;
 
-			String[] valorPartes = valor.split("&");
+			String[] valorPartes = valor.split("-&-");
 			String tipo = valorPartes[0];
 			String value = valorPartes[1];
 
@@ -89,14 +89,14 @@ public class FormularioDataEntityManagerImpl {
 				Date date = sourceFormat.parse(value);
 				insert.setParameter(index, date);
 			} else {
-				insert.setParameter(index, value.toString());
+				insert.setParameter(index, value);
 			}
 		}
 
 		insert.executeUpdate();
 	}
 
-	public String getNombreSecuencia(String tableName) throws Exception {
+	public String getNombreSecuencia(String tableName) {
 		String likeSequenceName = tableName.replace("dn_", "") + "_id";
 		String sql = "SELECT sequence_name FROM information_schema.sequences WHERE sequence_name LIKE '%"
 				+ likeSequenceName + "%'";
@@ -106,7 +106,7 @@ public class FormularioDataEntityManagerImpl {
 		return result.toString();
 	}
 
-	public Integer getValorSecuencia(String sequenceName) throws Exception {
+	public Integer getValorSecuencia(String sequenceName) {
 		String sql = "SELECT last_value FROM " + sequenceName;
 
 		Object result = em.createNativeQuery(sql).getSingleResult();
@@ -114,9 +114,9 @@ public class FormularioDataEntityManagerImpl {
 		return Integer.parseInt(result.toString());
 	}
 
-	public void registrarDetalle(List<FormularioData> datos, Integer secuencia) throws Exception {
-		List<String> listaTablas = new ArrayList<String>();
-		List<String> listaRelacionada = new ArrayList<String>();
+	public void registrarDetalle(List<FormularioData> datos, Integer secuencia) throws ParseException {
+		List<String> listaTablas = new ArrayList<>();
+		List<String> listaRelacionada = new ArrayList<>();
 		for (FormularioData dato : datos) {
 			if (dato.getControl().getSubmodulo() != null) {
 				if (!listaTablas.contains(dato.getControl().getSubmodulo().getTableName())) {
@@ -135,26 +135,25 @@ public class FormularioDataEntityManagerImpl {
 	}
 
 	public void registrarTablaDetalle(String tableName, List<FormularioData> datos, String columnaName,
-			Integer secuencia) throws Exception {
-		List<String> listaValores = new ArrayList<String>();
+			Integer secuencia) throws ParseException {
+		List<String> listaValores = new ArrayList<>();
 		final StringBuilder columnas = new StringBuilder();
 		final StringBuilder valores = new StringBuilder();
 
-		listaValores.add("sequence" + "&" + secuencia);
+		listaValores.add("sequence" + "-&-" + secuencia);
 		columnas.append(columnaName + ",");
 		valores.append("?" + 1 + ",");
 
 		Integer index = 1;
 		for (FormularioData dato : datos) {
-			if (dato.getControl().getSubmodulo() != null) {
-				if (dato.getControl().getSubmodulo().getTableName().contains(tableName)) {
-					index++;
+			if ((dato.getControl().getSubmodulo() != null)
+					&& (dato.getControl().getSubmodulo().getTableName().contains(tableName))) {
+				index++;
 
-					listaValores.add(dato.getControl().getInputType() + "&" + dato.getColumnValue());
+				listaValores.add(dato.getControl().getInputType() + "-&-" + dato.getColumnValue());
 
-					columnas.append(dato.getControl().getColumnName() + ",");
-					valores.append("?" + index + ",");
-				}
+				columnas.append(dato.getControl().getColumnName() + ",");
+				valores.append("?" + index + ",");
 			}
 		}
 

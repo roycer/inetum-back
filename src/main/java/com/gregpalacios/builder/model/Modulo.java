@@ -8,10 +8,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.Valid;
 
 import org.hibernate.annotations.Where;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.gregpalacios.builder.dto.ModuloDTO;
 
 @Entity
 @Where(clause = "estado_reg='1'")
@@ -27,7 +29,7 @@ public class Modulo {
 
 	@Column(name = "label", nullable = false)
 	private String label;
-	
+
 	@Column(name = "table_name", nullable = false)
 	private String tableName;
 
@@ -37,6 +39,19 @@ public class Modulo {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy", timezone = "America/Lima")
 	@Column(name = "fecha_reg", nullable = false)
 	private Date fechaReg;
+
+	public Modulo() {
+		super();
+	}
+
+	public Modulo(@Valid ModuloDTO dto) {
+		this.idModulo = dto.getIdModulo();
+		this.key = dto.getKey();
+		this.label = dto.getLabel();
+		this.tableName = dto.getTableName();
+		this.estadoReg = dto.getEstadoReg();
+		this.fechaReg = dto.getFechaReg();
+	}
 
 	public Integer getIdModulo() {
 		return idModulo;

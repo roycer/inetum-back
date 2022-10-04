@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gregpalacios.builder.exception.HandlerException;
 import com.gregpalacios.builder.model.ControlData;
 import com.gregpalacios.builder.service.IControlDataService;
 
@@ -38,9 +39,9 @@ public class DataController {
 			@ApiResponse(responseCode = "403", description = "Está prohibido acceder al recurso que estaba tratando de alcanzar", content = @Content()),
 			@ApiResponse(responseCode = "404", description = "No se encuentra el recurso que intentabas alcanzar", content = @Content()) })
 	@GetMapping
-	public ResponseEntity<List<ControlData>> listar() throws Exception {
+	public ResponseEntity<List<ControlData>> listar() throws HandlerException {
 		List<ControlData> lista = service.listar();
-		return new ResponseEntity<List<ControlData>>(lista, HttpStatus.OK);
+		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 
 	@Operation(summary = "Listar los datos registrados por ID del modulo")
@@ -50,9 +51,9 @@ public class DataController {
 			@ApiResponse(responseCode = "403", description = "Está prohibido acceder al recurso que estaba tratando de alcanzar", content = @Content()),
 			@ApiResponse(responseCode = "404", description = "No se encuentra el recurso que intentabas alcanzar", content = @Content()) })
 	@GetMapping("/modulo/{id}")
-	public ResponseEntity<List<ControlData>> listarPorIdModulo(@PathVariable("id") Integer id) throws Exception {
+	public ResponseEntity<List<ControlData>> listarPorIdModulo(@PathVariable("id") Integer id) throws HandlerException {
 		List<ControlData> lista = service.listarPorIdModulo(id);
-		return new ResponseEntity<List<ControlData>>(lista, HttpStatus.OK);
+		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 
 	@Operation(summary = "Listar los datos registrados por KEY del modulo")
@@ -62,9 +63,9 @@ public class DataController {
 			@ApiResponse(responseCode = "403", description = "Está prohibido acceder al recurso que estaba tratando de alcanzar", content = @Content()),
 			@ApiResponse(responseCode = "404", description = "No se encuentra el recurso que intentabas alcanzar", content = @Content()) })
 	@GetMapping("/modulo/k/{key}")
-	public ResponseEntity<List<ControlData>> listarPorKeyModulo(@PathVariable("key") String key) throws Exception {
+	public ResponseEntity<List<ControlData>> listarPorKeyModulo(@PathVariable("key") String key) throws HandlerException {
 		List<ControlData> lista = service.listarPorKeyModulo(key);
-		return new ResponseEntity<List<ControlData>>(lista, HttpStatus.OK);
+		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 
 	@Operation(summary = "Registrar datos del formulario")
@@ -74,7 +75,7 @@ public class DataController {
 			@ApiResponse(responseCode = "403", description = "Está prohibido acceder al recurso", content = @Content()),
 			@ApiResponse(responseCode = "404", description = "Recurso no encontrado", content = @Content()) })
 	@PostMapping
-	public ResponseEntity<Boolean> registrarTransaccional(@Valid @RequestBody List<ControlData> data) throws Exception {
+	public ResponseEntity<Boolean> registrarTransaccional(@Valid @RequestBody List<ControlData> data) throws HandlerException {
 		Boolean estado;
 		try {
 			service.registrarTransaccional(data);
@@ -83,7 +84,7 @@ public class DataController {
 			estado = false;
 		}
 
-		return new ResponseEntity<Boolean>(estado, HttpStatus.CREATED);
+		return new ResponseEntity<>(estado, HttpStatus.CREATED);
 	}
 
 }
